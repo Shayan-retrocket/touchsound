@@ -71,11 +71,14 @@ export default function App() {
     requestPermission()
   }
 
-  const speak = (thingToSay) => {
-    Speech.speak(thingToSay, {
-      rate: 0.6,
-      language: 'ar'
-    });
+  const speak = (thingToSay, delay) => {
+    setTimeout(() => {
+      Speech.speak(thingToSay, {
+        rate: 0.6,
+        language: 'ar',
+        onDone: () => setIsShaking(false),
+      });
+    }, delay);
   };
 
   return (
@@ -109,11 +112,12 @@ export default function App() {
               const dateRegex = /^\d{4}\/\d{2}\/\d{2}$/;
 
               if (!dateRegex.test(data.data)) {
+                setIsShaking(true)
                 Vibration.vibrate([1000, 1000, 1000]);
                 alert('لقد تم قراءة التاريخ بنجاح تاريخ الصلاحية هو ١٠/١٢/٢٠٢٨');
-                speak('لقد تم قراءة التاريخ بنجاح تاريخ الصلاحية هو ١٠/١٢/٢٠٢٨')
+                speak('لقد تم قراءة التاريخ بنجاح تاريخ الصلاحية هو ١٠/١٢/٢٠٢٨', 0)
               } else {
-                speak(data.data)
+                speak(data.data, 2000)
                 convertAndVibrate(data.data, setIsShaking);
               }
               setOpenCamera(false);
